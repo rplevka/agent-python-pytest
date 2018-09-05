@@ -4,6 +4,7 @@
 import logging
 import dill as pickle
 import pytest
+import requests
 import time
 from pytest_reportportal import LAUNCH_WAIT_TIMEOUT
 from .service import PyTestServiceClass
@@ -89,6 +90,18 @@ def pytest_configure(config):
     endpoint = config.getini('rp_endpoint')
     uuid = config.getini('rp_uuid')
     config._reportportal_configured = all([project, endpoint, uuid])
+    if config._reportportal_configured:
+        try:
+            r = requests.get(
+                '{0}/api/v1/project/{1}'.format(endpoint, project),
+                headers={
+                    'Authorization': 'bearer {0}'.format(uuid)
+                }
+            )
+            r.raise_for_status()
+        except:
+            config._reportportal_configured = False
+            return
     if config._reportportal_configured is False:
         return
 
