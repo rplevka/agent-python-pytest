@@ -91,7 +91,7 @@ def pytest_configure(config):
     uuid = config.getini('rp_uuid')
     ignore_errors = config.getini('rp_ignore_errors')
     config._reportportal_configured = all([project, endpoint, uuid])
-    if config._reportportal_configured and not ignore_errors:
+    if config._reportportal_configured and ignore_errors:
         try:
             r = requests.get(
                 '{0}/api/v1/project/{1}'.format(endpoint, project),
