@@ -133,11 +133,6 @@ class PyTestServiceClass(with_metaclass(Singleton, object)):
         if self.RP is None:
             return
 
-        hier_dirs = False
-        hier_module = False
-        hier_class = False
-        hier_param = False
-
         if not hasattr(session.config, 'slaveinput'):
             hier_dirs = session.config.getini('rp_hierarchy_dirs')
             hier_module = session.config.getini('rp_hierarchy_module')
@@ -192,7 +187,6 @@ class PyTestServiceClass(with_metaclass(Singleton, object)):
             if self._hier_parts[part]["start_flag"]:
                 continue
             self._hier_parts[part]["start_flag"] = True
-
             payload = {
                 'name': self._get_item_name(part),
                 'description': self._get_item_description(part),
@@ -220,6 +214,9 @@ class PyTestServiceClass(with_metaclass(Singleton, object)):
         self._stop_if_necessary()
         if self.RP is None:
             return
+
+        # Remove the test from the finish stack
+        self._finish_stack.pop(0)
 
         fta_rq = {
             'end_time': timestamp(),
