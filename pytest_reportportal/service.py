@@ -100,7 +100,7 @@ class PyTestServiceClass(with_metaclass(Singleton, object)):
         return self.RP
 
     def async_error_handler(self, exc_info):
-        self.terminate_service(nowait=True)
+        # self.terminate_service(nowait=True)
         self.RP = None
         self._errors.put_nowait(exc_info)
 
